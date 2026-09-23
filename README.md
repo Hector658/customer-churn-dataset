@@ -1,265 +1,51 @@
-# Customer Churn Analytics Platform
+# Customer Churn Dataset & EDA
 
-An end-to-end data and machine learning project focused on customer churn analysis for a **synthetic online sports betting platform**.
+Synthetic dataset generation and exploratory data analysis for a simulated online sports betting platform, built to study customer segmentation, activity patterns, and retention.
 
-The project simulates a betting platform where customer behavior, betting activity, and sporting events can be analyzed to identify patterns associated with customer churn.
+This is the first stage of a multi-part portfolio project. The data generated here feeds two downstream repos:
+- [customer-churn-etl](https://github.com/Hector658/Customer-Churn-ETL) — a Postgres + dbt pipeline built on top of this dataset
+- *(software engineering project — coming soon)*
 
-> **Project status:** Synthetic dataset generation completed. Exploratory Data Analysis is the next stage.
+> **Project status:** Dataset generation and EDA complete.
 
----
+## Contents
 
-## Project Overview
-
-Customer churn is an important problem for digital platforms because losing existing customers can affect revenue and long-term customer retention.
-
-In this project, I am building a synthetic sports betting platform and analyzing customer behavior to understand:
-
-* How customers interact with the platform.
-* How betting behavior differs between customer segments.
-* How sporting events and seasonality affect activity.
-* Which behavioral patterns may be associated with customer churn.
-
-The final goal is to develop a machine learning pipeline capable of identifying customers who may be at risk of churning.
-
-The project will also include data engineering, database management, API development, and deployment components.
-
----
+- `01_dataset_generation.ipynb` — generates the synthetic customers, bets, events, and participants data
+- `02__EDA.R` — exploratory analysis: data quality checks, customer segmentation, temporal activity trends, and cohort retention
 
 ## Dataset
 
-The dataset is **synthetically generated** for this project and covers the period from **2024 to 2025**.
+The dataset is synthetically generated and covers activity from 2024 to 2025. Four entities:
 
-The main entities are:
+### Customers
+`user_id`, `register_date`, `age`, `residence_country`, `payment_method`, `segment_client`, `active_days`, `annual_bets`, `n_bets`, `betting_dates`
 
-### Users
-
-User information includes:
-
-* `usuario_id`
-* `fecha_registro`
-* `edad`
-* `pais_residencia`
-* `metodo_pago_preferido`
-* `segmento_riesgo`
-* `limite_deposito_mensual`
+Customers are grouped into four behavioral segments: **Recreational**, **Occasional**, **Seasonal**, and **High Value**.
 
 ### Bets
-
-Each betting transaction contains information such as:
-
-* `apuesta_id`
-* `usuario_id`
-* `evento_id`
-* `fecha_colocacion`
-* `tipo_apuesta`
-
-The simulated betting types include:
-
-* Single
-* Parlay
-* System
+`user_id`, `placement_date`, `event_id`, `bet_type`, `market`, `participant_1`, `participant_2`, `selection`, `bet_amount`, `fee`, `result`, `bet_status`, `return_amount`, among others.
 
 ### Events
+`event_id`, `event_date`, `sport`, `competition`, `home_team`, `away_team`, `home_strength`, `away_strength`, `result`, among others. Roughly 10,000 events across football, basketball, tennis, and baseball, spanning competitions like LaLiga, Premier League, Champions League, NBA, MLB, Liga MX, ATP, and WTA.
 
-The event dataset contains approximately **10,000 sporting events** between 2024 and 2025.
+### Participants
+`participant_id`, `participant_name`, `sport`, `competition`, `popularity_score`, `strength_score`, `home_advantage` — team/player-level attributes used to simulate realistic event outcomes.
 
-Sports included:
+## EDA highlights
 
-* Football
-* Basketball
-* Tennis
-* Baseball
+The R script covers:
+1. Data quality checks (missing values, duplicates, referential consistency between tables)
+2. Customer segmentation (distribution by segment, country, payment method)
+3. Temporal analysis: monthly activity trends, per-customer activity patterns, and cohort retention
+4. An automated key-findings summary printed at the end of the script
 
-Competitions include:
+During this analysis, several data consistency issues were identified and documented (e.g., mismatches between a customer's stated bet count and their actual transaction count) — these are used intentionally in the downstream ETL project to demonstrate automated data quality testing.
 
-* Liga MX
-* Premier League
-* LaLiga
-* UEFA Champions League
-* NBA
-* EuroLeague
-* ATP
-* WTA
-* American League
-* National League
+## Tech stack
 
-Each event contains information such as:
-
-* Event ID
-* Date
-* Sport
-* Competition
-* Participants
-* Result
-
----
-
-## Synthetic Customer Behavior
-
-Different customer segments are used to simulate different betting patterns.
-
-The current segments include:
-
-* **Recreational**
-* **Occasional**
-* **High Value**
-* **Seasonal**
-
-The data generation process also incorporates seasonal changes in activity around major sporting periods.
-
-These assumptions are used only to create a realistic synthetic environment for the project.
-
----
-
-## Event Characteristics
-
-The project also incorporates simulated characteristics of sporting events and teams.
-
-These include factors such as:
-
-* Team popularity
-* Team strength
-* Home advantage
-* Stadium capacity
-* Average attendance
-
-The purpose is to create more realistic event data and provide additional variables that can later be used during analysis and feature engineering.
-
----
-
-## Churn
-
-One of the main objectives of the project is to develop a meaningful definition of customer churn.
-
-Rather than relying only on an arbitrary inactivity period, the project will investigate changes in customer behavior over time.
-
-Potential signals include:
-
-* Decreasing betting frequency
-* Changes in betting volume
-* Increasing inactivity
-* Changes in preferred betting behavior
-* Changes relative to the customer's historical activity
-
-The final churn definition will be established during the exploratory analysis and feature engineering stages.
-
----
-
-## Project Roadmap
-
-### 1. Problem Definition
-
-* [x] Define business problem
-* [x] Define project scope
-* [x] Design synthetic data structure
-
-### 2. Synthetic Dataset
-
-* [x] Generate users
-* [x] Generate sporting events
-* [x] Generate betting activity
-* [x] Add customer segments
-* [x] Add event characteristics
-* [x] Generate initial dataset
-
-### 3. Exploratory Data Analysis
-
-* [ ] Data quality analysis
-* [ ] Customer behavior analysis
-* [ ] Betting activity analysis
-* [ ] Seasonality analysis
-* [ ] Segment analysis
-* [ ] Churn analysis
-
-### 4. Feature Engineering
-
-* [ ] Define observation and prediction windows
-* [ ] Create customer-level features
-* [ ] Create recency and frequency features
-* [ ] Define churn target
-* [ ] Prepare modeling dataset
-
-### 5. Machine Learning
-
-* [ ] Establish baseline
-* [ ] Train classification models
-* [ ] Compare models
-* [ ] Evaluate performance
-* [ ] Analyze feature importance
-
-### 6. Data Engineering
-
-* [ ] PostgreSQL database
-* [ ] ETL pipeline
-* [ ] SQL analysis
-* [ ] PySpark processing
-
-### 7. API & Deployment
-
-* [ ] FastAPI
-* [ ] Docker
-* [ ] MLflow
-* [ ] Automated testing
-* [ ] CI/CD
-* [ ] Streamlit dashboard
-* [ ] Deployment
-
----
-
-## Tech Stack
-
-**Languages & Data Analysis**
-
-* Python
-* Pandas
-* NumPy
-* Scikit-learn
-
-**Database**
-
-* PostgreSQL
-* SQL
-
-**Data Engineering**
-
-* ETL
-* PySpark
-
-**Machine Learning**
-
-* Scikit-learn
-* MLflow
-
-**API & Deployment**
-
-* FastAPI
-* Docker
-
-**Visualization**
-
-* Matplotlib
-* Seaborn
-* Streamlit
-
-**Version Control**
-
-* Git
-* GitHub
-
----
+- Python (pandas, numpy) — dataset generation
+- R (tidyverse, lubridate, ggplot2) — exploratory analysis
 
 ## Disclaimer
 
-This project uses **synthetic data** created for educational and portfolio purposes.
-
-The customer segments, betting behavior, event characteristics, and churn patterns are simulated assumptions and should not be interpreted as real-world statistics.
-
-No real customer information is used.
-
----
-
-## Project Status
-
-**Current stage:** Synthetic dataset generation completed.
-
-**Next stage:** Exploratory Data Analysis and data validation.
+This project uses synthetic data created for educational and portfolio purposes. Customer segments, betting behavior, and event characteristics are simulated assumptions and should not be interpreted as real-world statistics. No real customer information is used.
